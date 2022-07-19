@@ -1,8 +1,14 @@
-export type Person = {
-  firstName: string;
-  lastName: string;
-  age: number;
-  visits: number;
-  status: string;
-  progress: number;
+export type Movie = {
+  year: string;
+  votes: string;
+  title: string;
+  runtime: string;
+  revenue: string;
+  rating: string;
+  rank: string;
+  metascore: string;
+  genre: string[];
+  director: string;
+  description: string;
+  actors: string[];
 };
