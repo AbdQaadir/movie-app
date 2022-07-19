@@ -1,25 +1,17 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import { Box, Flex } from "@chakra-ui/react";
+import TableComponent from "./components/table";
+
+import { data } from "./data";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Flex w="100%" h="100vh" alignItems="center" justifyContent="center">
+      <Box minW="90%" w="1000px" h="90%">
+        <TableComponent data={data} />
+      </Box>
+    </Flex>
   );
 }
 
