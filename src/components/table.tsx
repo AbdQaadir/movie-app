@@ -19,6 +19,7 @@ import {
 } from "@tanstack/react-table";
 import { DebounceInput } from "react-debounce-input";
 import { Movie } from "../types";
+import CommentsModal from "./comments-modal";
 
 const columns: ColumnDef<Movie>[] = [
   {
@@ -168,7 +169,7 @@ function TableComponent({ data }: TTable) {
                 </option>
                 {genres?.map((option) => {
                   return (
-                    <option key="option" value={option}>
+                    <option key={option} value={option}>
                       {option}
                     </option>
                   );
@@ -178,49 +179,27 @@ function TableComponent({ data }: TTable) {
           </Tr>
           {table.getRowModel().rows.map((row) => (
             <Tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <Td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </Td>
-              ))}
+              {row.getVisibleCells().map((cell) => {
+                return cell.column.id === "title" ? (
+                  <CommentsModal title={cell.getValue()}>
+                    {({ handleClick }) => (
+                      <Td key={cell.id} onClick={handleClick}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </Td>
+                    )}
+                  </CommentsModal>
+                ) : (
+                  <Td key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </Td>
+                );
+              })}
             </Tr>
           ))}
-          {table.getRowModel().rows.map((row) => (
-            <Tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <Td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </Td>
-              ))}
-            </Tr>
-          ))}
-          {table.getRowModel().rows.map((row) => (
-            <Tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <Td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </Td>
-              ))}
-            </Tr>
-          ))}
-          {table.getRowModel().rows.map((row) => (
-            <Tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <Td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </Td>
-              ))}
-            </Tr>
-          ))}
-          {table.getRowModel().rows.map((row) => (
-            <Tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <Td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </Td>
-              ))}
-            </Tr>
-          ))}
+
           {table.getRowModel().rows.map((row) => (
             <Tr key={row.id}>
               {row.getVisibleCells().map((cell) => (
