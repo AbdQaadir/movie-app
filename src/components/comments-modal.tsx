@@ -12,7 +12,7 @@ import {
 import { setDoc, doc, onSnapshot } from "firebase/firestore";
 
 import { db } from "../configs/firebase";
-import Comment from "./comment";
+import CommentItem from "./comment-item";
 import AddComment from "./add-comment";
 
 type TCommentsModal = {
@@ -76,7 +76,7 @@ const CommentsModal = ({ isOpen, onClose, title }: TCommentsModal) => {
               <Text>{error}</Text>
             ) : (
               comments?.map((comment, index) => (
-                <Comment key={index + comment} comment={comment} />
+                <CommentItem key={index + comment} comment={comment} />
               ))
             )}
           </ModalBody>

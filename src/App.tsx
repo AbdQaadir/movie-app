@@ -1,10 +1,11 @@
 import "./App.css";
 
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import MoviesTable from "./components/movies-table";
 import { useEffect, useState } from "react";
-import { ReactComponent as LoadingIcon } from "./assets/loading.svg";
-// import { data } from "./data";
+
+import ErrorMsg from "./components/error-msg";
+import LoadingSpinner from "./components/loading-spinner";
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -32,13 +33,9 @@ function App() {
     <Flex w="100%" h="100vh" alignItems="center" justifyContent="center">
       <Box minW="90%" w="1000px" h="90%">
         {loading ? (
-          <Flex w="100%" h="100%" alignItems="center" justifyContent="center">
-            <LoadingIcon />
-          </Flex>
+          <LoadingSpinner />
         ) : error ? (
-          <Flex w="100%" h="100%" alignItems="center" justifyContent="center">
-            <Text color="red">{error}</Text>
-          </Flex>
+          <ErrorMsg error={error} />
         ) : (
           <MoviesTable data={data} />
         )}

@@ -4,7 +4,7 @@ import React from "react";
 type TComment = {
   comment: string;
 };
-function Comment({ comment }: TComment) {
+function CommentItem({ comment }: TComment) {
   return (
     <Flex w="100%" minH="30px" gap="10px" py="2">
       <Box bg="blue.600" borderRadius="50%" height="40px" w="45px"></Box>
@@ -15,4 +15,4 @@ function Comment({ comment }: TComment) {
   );
 }
 
-export default Comment;
+export default CommentItem;
