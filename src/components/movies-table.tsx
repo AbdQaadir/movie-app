@@ -11,6 +11,7 @@ import {
   Select,
   Button,
   Flex,
+  useDisclosure,
 } from "@chakra-ui/react";
 import {
   ColumnDef,
@@ -82,9 +83,12 @@ type TTable = {
 };
 
 function MoviesTable({ data }: TTable) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const [tableData, setTableData] = React.useState(() => [...data]);
   const [searchParam, setSearchParam] = React.useState("");
   const [genre, setGenre] = React.useState("All");
+  const [selectedMovie, setSelectedMovie] = React.useState("");
 
   const table = useReactTable({
     data: tableData,
@@ -121,108 +125,126 @@ function MoviesTable({ data }: TTable) {
   }, [searchParam, filterMoviesByName]);
 
   return (
-    <TableContainer
-      w="100%"
-      h="100%"
-      overflowY="scroll"
-      p={3}
-      overflow="hidden"
-      border="1px solid gray"
-      borderRadius="10px"
-    >
-      <Table variant="striped" colorScheme="gray">
-        <Thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <Tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <Th key={header.id} textTransform="capitalize">
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                </Th>
-              ))}
+    <>
+      {isOpen && (
+        <CommentsModal
+          title={selectedMovie}
+          isOpen={!!selectedMovie && isOpen}
+          onClose={() => {
+            setSelectedMovie("");
+            onClose();
+          }}
+        />
+      )}
+
+      <TableContainer
+        w="100%"
+        h="100%"
+        overflowY="scroll"
+        p={3}
+        overflow="hidden"
+        border="1px solid gray"
+        borderRadius="10px"
+      >
+        <Table variant="striped" colorScheme="gray">
+          <Thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <Tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <Th key={header.id} textTransform="capitalize">
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </Th>
+                ))}
+              </Tr>
+            ))}
+          </Thead>
+          <Tbody>
+            <Tr>
+              <Td>
+                <DebounceInput
+                  style={{ borderColor: "#ccc" }}
+                  minLength={2}
+                  element={Input}
+                  placeholder="Filter by Title"
+                  debounceTimeout={300}
+                  onChange={(event) => setSearchParam(event.target.value)}
+                />
+              </Td>
+              {Array(columns.length - 2)
+                .fill("")
+                .map((item, index) => {
+                  return <Td key={index}>&nbsp;</Td>;
+                })}
+              <Td>
+                <Select
+                  placeholder="Filter by Genre"
+                  onChange={(event) => setGenre(event.target.value)}
+                >
+                  <option key="option" value="All">
+                    All
+                  </option>
+                  {genres?.map((option) => {
+                    return (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    );
+                  })}
+                </Select>
+              </Td>
             </Tr>
-          ))}
-        </Thead>
-        <Tbody>
-          <Tr>
-            <Td>
-              <DebounceInput
-                style={{ borderColor: "#ccc" }}
-                minLength={2}
-                element={Input}
-                placeholder="Filter by Title"
-                debounceTimeout={300}
-                onChange={(event) => setSearchParam(event.target.value)}
-              />
-            </Td>
-            {Array(columns.length - 2)
-              .fill("")
-              .map((item, index) => {
-                return <Td key={index}>&nbsp;</Td>;
-              })}
-            <Td>
-              <Select
-                placeholder="Filter by Genre"
-                onChange={(event) => setGenre(event.target.value)}
-              >
-                <option key="option" value="All">
-                  All
-                </option>
-                {genres?.map((option) => {
-                  return (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
+            {table.getRowModel().rows.map((row) => (
+              <Tr key={row.id}>
+                {row.getVisibleCells().map((cell) => {
+                  return cell.column.id === "title" ? (
+                    <Td
+                      key={cell.id}
+                      onClick={() => {
+                        onOpen();
+                        setSelectedMovie(cell.getValue());
+                      }}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </Td>
+                  ) : (
+                    <Td key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </Td>
                   );
                 })}
-              </Select>
-            </Td>
-          </Tr>
-          {table.getRowModel().rows.map((row) => (
-            <Tr key={row.id}>
-              {row.getVisibleCells().map((cell) => {
-                return cell.column.id === "title" ? (
-                  <CommentsModal key={cell.id} title={cell.getValue()}>
-                    {({ handleClick }) => (
-                      <Td key={cell.id} onClick={handleClick}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </Td>
-                    )}
-                  </CommentsModal>
-                ) : (
-                  <Td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </Td>
-                );
-              })}
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
-      <Flex py={5} justifyContent="flex-end" w="100%" gap={3}>
-        <Button
-          colorScheme="blue"
-          onClick={() => table.previousPage()}
-          isDisabled={!table.getCanPreviousPage()}
-        >
-          {"<"}
-        </Button>
-        <Button
-          colorScheme="blue"
-          onClick={() => table.nextPage()}
-          isDisabled={!table.getCanNextPage()}
-        >
-          {">"}
-        </Button>
-      </Flex>
-    </TableContainer>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+        <Flex py={5} justifyContent="flex-end" w="100%" gap={3}>
+          <Button
+            colorScheme="blue"
+            onClick={() => table.previousPage()}
+            isDisabled={!table.getCanPreviousPage()}
+          >
+            {"<"}
+          </Button>
+          <Button
+            colorScheme="blue"
+            onClick={() => table.nextPage()}
+            isDisabled={!table.getCanNextPage()}
+          >
+            {">"}
+          </Button>
+        </Flex>
+      </TableContainer>
+    </>
   );
 }
 

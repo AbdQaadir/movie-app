@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -7,7 +7,6 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useDisclosure,
   Text,
 } from "@chakra-ui/react";
 import { setDoc, doc, onSnapshot } from "firebase/firestore";
@@ -18,43 +17,14 @@ import AddComment from "./add-comment";
 
 type TCommentsModal = {
   title: string;
-  children: ({
-    handleClick,
-  }: {
-    handleClick: () => void;
-  }) => string | React.ReactNode;
+  isOpen: boolean;
+  onClose: () => void;
 };
 
-const CommentsModal = ({ children, title }: TCommentsModal) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [loading, setLoading] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+const CommentsModal = ({ isOpen, onClose, title }: TCommentsModal) => {
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const [comments, setComments] = useState<string[]>([]);
-
-  const handleClick = () => {
-    isOpen ? onClose() : onOpen();
-  };
-
-  // const getComments = async (title: string) => {
-  //   setLoading(true);
-  //   try {
-  //     console.log({ title });
-  //     const commentRef = doc(db, "comments", title);
-  //     const commentSnap = await getDoc(commentRef);
-
-  //     if (commentSnap.exists()) {
-  //       setComments(commentSnap.data().comments);
-  //     } else {
-  //       setError("Be the first to comment...");
-  //     }
-  //   } catch (error: unknown) {
-  //     if (typeof error === "string") setError(error);
-  //     if (error instanceof Error) setError(error.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const addComment = async (value: string, callback: () => void) => {
     setSubmitting(true);
@@ -77,7 +47,6 @@ const CommentsModal = ({ children, title }: TCommentsModal) => {
   useEffect(() => {
     if (!isOpen || !title) return;
 
-    setLoading(true);
     const commentRef = doc(db, "comments", title);
     const unsubscribe = onSnapshot(commentRef, (doc) => {
       const currentData = doc.data();
@@ -88,40 +57,35 @@ const CommentsModal = ({ children, title }: TCommentsModal) => {
       }
       setError("Be the first to comment...");
     });
-    setLoading(false);
+
     //remember to unsubscribe from your realtime listener on unmount or you will create a memory leak
     return () => unsubscribe();
   }, [isOpen, title]);
+
   return (
     <>
-      {children({ handleClick })}
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent minH="400px" maxH="80vh" bg="gray.200">
+          <ModalHeader bg="blue.600" color="white">
+            {title}
+          </ModalHeader>
+          <ModalCloseButton color="white" />
+          <ModalBody h="100%" overflowY="scroll">
+            {error && comments?.length < 1 ? (
+              <Text>{error}</Text>
+            ) : (
+              comments?.map((comment, index) => (
+                <Comment key={index + comment} comment={comment} />
+              ))
+            )}
+          </ModalBody>
 
-      {isOpen && (
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent minH="400px" maxH="80vh" bg="gray.200">
-            <ModalHeader bg="blue.600" color="white">
-              {title}
-            </ModalHeader>
-            <ModalCloseButton color="white" />
-            <ModalBody h="100%" overflowY="scroll">
-              {loading ? (
-                <Text>Fetching comments</Text>
-              ) : error ? (
-                <Text>{error}</Text>
-              ) : (
-                comments.map((comment, index) => (
-                  <Comment key={index + comment} comment={comment} />
-                ))
-              )}
-            </ModalBody>
-
-            <ModalFooter px={0} pb={0}>
-              <AddComment onSubmit={addComment} submitting={submitting} />
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      )}
+          <ModalFooter px={0} pb={0}>
+            <AddComment onSubmit={addComment} submitting={submitting} />
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 };
