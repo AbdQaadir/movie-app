@@ -3,18 +3,21 @@ import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
   TableContainer,
   Input,
   Select,
+  Button,
+  Flex,
 } from "@chakra-ui/react";
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { DebounceInput } from "react-debounce-input";
@@ -78,7 +81,7 @@ type TTable = {
   data: Movie[];
 };
 
-function TableComponent({ data }: TTable) {
+function MoviesTable({ data }: TTable) {
   const [tableData, setTableData] = React.useState(() => [...data]);
   const [searchParam, setSearchParam] = React.useState("");
   const [genre, setGenre] = React.useState("All");
@@ -87,6 +90,8 @@ function TableComponent({ data }: TTable) {
     data: tableData,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   });
 
   const filterMoviesByName = React.useCallback(() => {
@@ -181,7 +186,7 @@ function TableComponent({ data }: TTable) {
             <Tr key={row.id}>
               {row.getVisibleCells().map((cell) => {
                 return cell.column.id === "title" ? (
-                  <CommentsModal title={cell.getValue()}>
+                  <CommentsModal key={cell.id} title={cell.getValue()}>
                     {({ handleClick }) => (
                       <Td key={cell.id} onClick={handleClick}>
                         {flexRender(
@@ -199,54 +204,26 @@ function TableComponent({ data }: TTable) {
               })}
             </Tr>
           ))}
-
-          {table.getRowModel().rows.map((row) => (
-            <Tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <Td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </Td>
-              ))}
-            </Tr>
-          ))}
-          {table.getRowModel().rows.map((row) => (
-            <Tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <Td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </Td>
-              ))}
-            </Tr>
-          ))}
-          {table.getRowModel().rows.map((row) => (
-            <Tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <Td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </Td>
-              ))}
-            </Tr>
-          ))}
         </Tbody>
-        <Tfoot>
-          {table.getFooterGroups().map((footerGroup) => (
-            <Tr key={footerGroup.id}>
-              {footerGroup.headers.map((header) => (
-                <Th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext()
-                      )}
-                </Th>
-              ))}
-            </Tr>
-          ))}
-        </Tfoot>
       </Table>
+      <Flex py={5} justifyContent="flex-end" w="100%" gap={3}>
+        <Button
+          colorScheme="blue"
+          onClick={() => table.previousPage()}
+          isDisabled={!table.getCanPreviousPage()}
+        >
+          {"<"}
+        </Button>
+        <Button
+          colorScheme="blue"
+          onClick={() => table.nextPage()}
+          isDisabled={!table.getCanNextPage()}
+        >
+          {">"}
+        </Button>
+      </Flex>
     </TableContainer>
   );
 }
 
-export default TableComponent;
+export default MoviesTable;

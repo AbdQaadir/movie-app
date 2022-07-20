@@ -1,7 +1,7 @@
 import "./App.css";
 
 import { Box, Flex } from "@chakra-ui/react";
-import TableComponent from "./components/table";
+import MoviesTable from "./components/movies-table";
 import { useEffect, useState } from "react";
 
 // import { data } from "./data";
@@ -36,7 +36,7 @@ function App() {
         ) : error ? (
           <Box>{error}</Box>
         ) : (
-          <TableComponent data={data} />
+          <MoviesTable data={data} />
         )}
       </Box>
     </Flex>
