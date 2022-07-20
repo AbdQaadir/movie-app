@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { setDoc, doc, onSnapshot } from "firebase/firestore";
 
-import { db } from "../App";
+import { db } from "../configs/firebase";
 import Comment from "./comment";
 import AddComment from "./add-comment";
 
