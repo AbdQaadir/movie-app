@@ -6,24 +6,10 @@ It also has search and filter (by genre) functionalities.
 
 ## Project Architecture
 
-Below is a preview of the code Architecture
---public
---src
-----assets
-------loading.svg
-----components
-------add-comment.tsx
-------comment-item.tsx
-------comments-modal.tsx
-------error-msg.tsx
-------loading-spinner.tsx
-------movies-table.tsx
-----configs
-------firebase.ts
---.env
---.gitignore
---package-lock.json
---package.json
+UI Framework: React/TypeScript
+UI Library: Chakra UI
+Table Library: Tanstack React Table
+Backend: Firebase
 
 ## What I would have improved?
 
