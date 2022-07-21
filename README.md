@@ -25,6 +25,13 @@ Below is a preview of the code Architecture
 --package-lock.json
 --package.json
 
+## What I would have improved?
+
+1. User authentication
+2. With user authentication in place, each comment on a movie will have a basic details of the commenter. This will improve the whole comment experience.
+3. Implement sorting functionality on the table.
+4. Although, I've developed this app using TypeScript for safe development process, it'd be also advantageous to add unit testing.
+
 ## Running the application
 
 Firstly, you need to clone the repository to your local computer.
