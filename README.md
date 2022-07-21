@@ -25,9 +25,22 @@ Below is a preview of the code Architecture
 --package-lock.json
 --package.json
 
-## Available Scripts
+## Running the application
 
-In the project directory, you can run:
+Firstly, you need to clone the repository to your local computer.
+Run this command in the command line:
+
+### `git clone repository_url_here`
+
+This will clone the repository to your local computer.
+
+### `cd movie-chat-app`
+
+This will switch the current directory to the project directory.
+
+### `npm install`
+
+Installs the necessary dependencies to run the application.
 
 ### `npm start`
 
