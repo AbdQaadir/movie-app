@@ -1,6 +1,29 @@
-# Getting Started with Create React App
+# Movie App Collection
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a movie app collection tabulated with columns such as Title, Year, Runtime, Rating and Genre.
+
+It also has search and filter (by genre) functionalities.
+
+## Project Architecture
+
+Below is a preview of the code Architecture
+--public
+--src
+----assets
+------loading.svg
+----components
+------add-comment.tsx
+------comment-item.tsx
+------comments-modal.tsx
+------error-msg.tsx
+------loading-spinner.tsx
+------movies-table.tsx
+----configs
+------firebase.ts
+--.env
+--.gitignore
+--package-lock.json
+--package.json
 
 ## Available Scripts
 

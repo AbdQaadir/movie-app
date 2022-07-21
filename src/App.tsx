@@ -4,9 +4,6 @@ import { Box, Flex } from "@chakra-ui/react";
 import MoviesTable from "./components/movies-table";
 import { useEffect, useState } from "react";
 
-import ErrorMsg from "./components/error-msg";
-import LoadingSpinner from "./components/loading-spinner";
-
 function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -32,13 +29,7 @@ function App() {
   return (
     <Flex w="100%" h="100vh" alignItems="center" justifyContent="center">
       <Box minW="90%" w="1000px" h="90%">
-        {loading ? (
-          <LoadingSpinner />
-        ) : error ? (
-          <ErrorMsg error={error} />
-        ) : (
-          <MoviesTable data={data} />
-        )}
+        <MoviesTable data={data} error={error} loading={loading} />
       </Box>
     </Flex>
   );
