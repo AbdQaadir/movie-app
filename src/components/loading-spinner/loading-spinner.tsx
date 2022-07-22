@@ -1,5 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import { ReactComponent as LoadingIcon } from "../assets/loading.svg";
+import { ReactComponent as LoadingIcon } from "../../assets/loading.svg";
 
 function LoadingSpinner() {
   return (

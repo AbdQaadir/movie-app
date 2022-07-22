@@ -1,7 +1,7 @@
 import "./App.css";
 
 import { Box, Flex } from "@chakra-ui/react";
-import MoviesTable from "./components/movies-table";
+import MoviesTable from "./components/movies-table/movies-table";
 import { useEffect, useState } from "react";
 
 function App() {

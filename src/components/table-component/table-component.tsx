@@ -21,7 +21,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { DebounceInput } from "react-debounce-input";
-import { Movie } from "../types";
+import { Movie } from "../../types";
 
 type TTable = {
   data: Movie[];
@@ -43,11 +43,13 @@ function TableComponent({
   const table = useReactTable({
     data: data,
     columns,
+    initialState: { pagination: { pageSize: 30 } },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
 
+  console.log({ table: table.getState() });
   return (
     <>
       <TableContainer
@@ -55,14 +57,21 @@ function TableComponent({
         h="100%"
         overflowY="scroll"
         p={3}
-        overflow="hidden"
+        pt={0}
         border="1px solid gray"
         borderRadius="10px"
       >
-        <Table variant="striped" colorScheme="gray">
+        <Table h="100%" variant="striped" colorScheme="gray">
           <Thead>
             {table.getHeaderGroups().map((headerGroup) => (
-              <Tr key={headerGroup.id}>
+              <Tr
+                key={headerGroup.id}
+                pt={3}
+                position="sticky"
+                top={0}
+                zIndex={1}
+                background="#fff"
+              >
                 {headerGroup.headers.map((header) => (
                   <Th key={header.id} textTransform="capitalize">
                     {header.isPlaceholder

@@ -1,12 +1,12 @@
 import * as React from "react";
 import { useDisclosure } from "@chakra-ui/react";
 import { ColumnDef } from "@tanstack/react-table";
-import { Movie } from "../types";
-import CommentsModal from "./comments-modal";
-import TableComponent from "./table-component";
-import ErrorMsg from "./error-msg";
-import LoadingSpinner from "./loading-spinner";
-import TablePreview from "./table-preview";
+import { Movie } from "../../types";
+import CommentsModal from "../comments-modal/comments-modal";
+import TableComponent from "../table-component/table-component";
+import ErrorMsg from "../error-msg/error-msg";
+import LoadingSpinner from "../loading-spinner/loading-spinner";
+import TablePreview from "../table-preview/table-preview";
 
 const columns: ColumnDef<Movie>[] = [
   {
